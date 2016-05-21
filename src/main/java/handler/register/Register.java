@@ -2,6 +2,7 @@ package handler.register;
 
 import pipe.DataOutputPipe;
 
+import java.io.*;
 import java.util.HashMap;
 
 /**
@@ -90,7 +91,7 @@ public class Register {
      */
     public <T> T fetchAndGetModuleFromPipe(String className) {
         fetchModuleFromPipe(className);
-        return (T) moduleContainerList.get(className);
+        return pullModule(className);
     }
 
     /**
@@ -107,7 +108,7 @@ public class Register {
      */
     public <T> T pullAndGetModuleFromPipe(String className) {
         pullModuleFromPipe(className);
-        return (T) moduleContainerList.get(className);
+        return pullModule(className);
     }
 
     /**
@@ -118,7 +119,15 @@ public class Register {
      * @return Module
      */
     public <T> T pullModule(String className) {
-        return (T) moduleContainerList.get(className);
+        Object copyedObject = null;
+        try {
+            copyedObject = copyObject(moduleContainerList.get(className));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return (T) copyedObject;
     }
 
     /**
@@ -156,5 +165,23 @@ public class Register {
     // TODO
     public void removeModule() {
 
+    }
+
+    public synchronized  <T> T copyObject(Object object) throws IOException, ClassNotFoundException {
+        // ObjectOutputStream erzeugen
+        ByteArrayOutputStream bufOutStream = new ByteArrayOutputStream();
+        ObjectOutputStream outStream = new ObjectOutputStream(bufOutStream);
+
+        // Objekt im byte-Array speichern
+        outStream.writeObject(object);
+        outStream.close();
+
+        // Pufferinhalt abrufen
+        byte[] buffer = bufOutStream.toByteArray();
+        // ObjectInputStream erzeugen
+        ByteArrayInputStream bufInStream = new ByteArrayInputStream(buffer);
+        ObjectInputStream inStream = new ObjectInputStream(bufInStream);
+        // Objekt wieder auslesen
+        return (T)inStream.readObject();
     }
 }

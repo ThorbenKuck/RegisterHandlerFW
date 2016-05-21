@@ -24,6 +24,8 @@ public class Main {
 
         RegisterHandler.getInstance().getRegisterForId("1").pushModuleToRegister("c", c);
 
+        c.higher();
+
         int longer = 0;
 
         while(longer < 4) {
