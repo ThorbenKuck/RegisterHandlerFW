@@ -2,15 +2,11 @@ package handler;
 
 import handler.register.Register;
 import handler.register.RegisterID;
-import pipe.DataOutputPipe;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class RegisterHandler {
 
-    private static List<Class<?>> allModules;
-    private static DataOutputPipe dataOutputPipe;
     private static RegisterHandler instance;
 
     // Eine statische Liste alle Register, damit kein Name 2 mal vor kommt
