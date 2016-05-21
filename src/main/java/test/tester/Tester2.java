@@ -14,10 +14,10 @@ public class Tester2 {
     }
 
     public void run() {
-        C c = register.fetchAndGetModuleFromPipe(C.class.getName());
+        C c = register.pullModule("c");
         c.howMuch();
         c.higher();
-        register.pushModuleToRegister(C.class.getName() , c);
+        register.pushModuleToRegister("c" , c);
     }
 
 }

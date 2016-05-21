@@ -3,7 +3,9 @@ package handler;
 import handler.register.Register;
 import handler.register.RegisterID;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class RegisterHandler {
 
@@ -12,6 +14,8 @@ public class RegisterHandler {
     // Eine statische Liste alle Register, damit kein Name 2 mal vor kommt
     private static HashMap<RegisterID, Register> registerList;
     private static HashMap<String, RegisterID> boundRegisters;
+    private static List<String> rootPackages;
+    public static final int ROOT_PACKAGES_EMPTY = -1;
 
     public synchronized static RegisterHandler getInstance() {
         if(instance == null) {
@@ -65,4 +69,41 @@ public class RegisterHandler {
         return boundRegisters.get(legereID);
     }
 
+    public static void setScanRootPackage(String packageName) {
+        rootPackages = new ArrayList<>();
+        rootPackages.add(packageName);
+    }
+
+    public static void setScanRootPackage(List<String> packages) {
+        if(rootPackages == null) {
+            rootPackages = new ArrayList<>();
+        }
+        rootPackages = packages;
+    }
+
+    public static void addToScanPackages(String packageName) {
+        if(rootPackages == null) {
+            rootPackages = new ArrayList<>();
+        }
+        rootPackages.add(packageName);
+    }
+
+    public static void addToScanPackages (List<String> packageNames) {
+        int packageSize = packageNames.size();
+        for(int i = 0 ; i < packageSize ; i++) {
+            setScanRootPackage(packageNames.get(i));
+        }
+    }
+
+    public static int getSizeOfScannedPackages() {
+        if(rootPackages == null) {
+            return ROOT_PACKAGES_EMPTY;
+        } else {
+            return rootPackages.size();
+        }
+    }
+
+    public static ArrayList<String> getAllRootPaths() {
+        return (ArrayList<String>) rootPackages;
+    }
 }
