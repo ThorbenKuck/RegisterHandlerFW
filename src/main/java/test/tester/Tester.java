@@ -1,23 +1,21 @@
 package test.tester;
 
-import annotations.RegisterModule;
 import handler.RegisterHandler;
 import handler.register.Register;
 
-@RegisterModule
 public class Tester {
 
     private Register register;
 
     public Tester() {
-        this.register = RegisterHandler.getInstance().getRegisterForId("1");
+        this.register = RegisterHandler.getRegisterForId("1");
     }
 
     public void run() {
-        C c = register.pullModule("c");
+        C c = register.pullModule(C.class.getName());
         c.howMuch();
         c.higher();
-        register.pushModuleToRegister("c" , c);
+        register.pushModuleToRegister(C.class.getName() , c);
     }
 
 }

@@ -119,8 +119,9 @@ public class Register {
      * @return Module
      */
     public <T> T pullModule(String className) {
-        Object copyedObject = null;
-        copyedObject = copyObject(moduleContainerList.get(className));
+        // TODO
+        // Object copyedObject = null;
+        // copyedObject = copyObject(moduleContainerList.get(className));
         return (T) moduleContainerList.get(className);
     }
 
