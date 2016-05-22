@@ -2,7 +2,7 @@ package handler.register;
 
 import pipe.DataOutputPipe;
 
-import java.io.*;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 /**
@@ -119,15 +119,10 @@ public class Register {
      * @return Module
      */
     public <T> T pullModule(String className) {
-        Object copyedObject = null;
-        try {
-            copyedObject = copyObject(moduleContainerList.get(className));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return (T) copyedObject;
+        // TODO
+        // Object copyedObject = null;
+        // copyedObject = copyObject(moduleContainerList.get(className));
+        return (T) moduleContainerList.get(className);
     }
 
     /**
@@ -167,21 +162,14 @@ public class Register {
 
     }
 
-    public synchronized  <T> T copyObject(Object object) throws IOException, ClassNotFoundException {
-        // ObjectOutputStream erzeugen
-        ByteArrayOutputStream bufOutStream = new ByteArrayOutputStream();
-        ObjectOutputStream outStream = new ObjectOutputStream(bufOutStream);
-
-        // Objekt im byte-Array speichern
-        outStream.writeObject(object);
-        outStream.close();
-
-        // Pufferinhalt abrufen
-        byte[] buffer = bufOutStream.toByteArray();
-        // ObjectInputStream erzeugen
-        ByteArrayInputStream bufInStream = new ByteArrayInputStream(buffer);
-        ObjectInputStream inStream = new ObjectInputStream(bufInStream);
-        // Objekt wieder auslesen
-        return (T)inStream.readObject();
+    public synchronized  <T> T copyObject(Object object) {
+        Method method = null;
+        try {
+            method = Object.class.getDeclaredMethod( "clone" );
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        method.setAccessible( true );
+        return null;
     }
 }
