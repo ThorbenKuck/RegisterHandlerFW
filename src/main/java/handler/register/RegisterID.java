@@ -9,7 +9,7 @@ public class RegisterID {
     private static List<String> allRegisterIDs;
     private String currentRegisterID;
 
-    public RegisterID() {
+    RegisterID() {
         allRegisterIDs = new ArrayList<>();
         randomID();
     }
@@ -18,7 +18,7 @@ public class RegisterID {
         return currentRegisterID;
     }
 
-    public void randomID() {
+    void randomID() {
         String toTest = UUID.randomUUID().toString();
         while(allRegisterIDs.contains(toTest)) {
             toTest = UUID.randomUUID().toString();

@@ -2,7 +2,9 @@ package handler.register;
 
 import pipe.DataOutputPipe;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 /**
@@ -119,10 +121,7 @@ public class Register {
      * @return Module
      */
     public <T> T pullModule(String className) {
-        // TODO
-        // Object copyedObject = null;
-        // copyedObject = copyObject(moduleContainerList.get(className));
-        return (T) moduleContainerList.get(className);
+        return (T) cloneObject(moduleContainerList.get(className));
     }
 
     /**
@@ -162,14 +161,39 @@ public class Register {
 
     }
 
-    public synchronized  <T> T copyObject(Object object) {
-        Method method = null;
+    private synchronized Object cloneObject(Object object) {
         try {
-            method = Object.class.getDeclaredMethod( "clone" );
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+
+            Object clone = object.getClass().newInstance();
+
+            for (Field field : object.getClass().getDeclaredFields()) {
+
+                field.setAccessible(true);
+
+                if(field.get(object) == null || Modifier.isFinal(field.getModifiers())) {
+                    continue;
+                }
+
+                if(field.getType().isPrimitive() || field.getType().equals(String.class)
+                        || field.getType().getSuperclass().equals(Number.class)
+                        || field.getType().equals(Boolean.class)) {
+
+                    field.set(clone, field.get(object));
+
+                } else {
+
+                    Object childObj = field.get(object);
+
+                    if(childObj == object) {
+                        field.set(clone, clone);
+                    } else {
+                        field.set(clone, cloneObject(field.get(object)));
+                    }
+                }
+            }
+            return clone;
+        } catch(Exception e) {
+            return null;
         }
-        method.setAccessible( true );
-        return null;
     }
 }
