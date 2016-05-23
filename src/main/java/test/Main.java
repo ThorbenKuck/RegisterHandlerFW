@@ -1,7 +1,9 @@
 package test;
 
 import handler.RegisterHandler;
+import handler.register.Register;
 import handler.register.RegisterID;
+import test.tester.A;
 import test.tester.C;
 import test.tester.Tester;
 import test.tester.Tester2;
@@ -12,13 +14,15 @@ public class Main {
 
         RegisterHandler.setScanRootPackage("test");
 
-        RegisterID id = RegisterHandler.pullNewRegister(new TestTemplate());
+        Register register = RegisterHandler.pullAndGetNewRegister(new TestTemplate());
 
         Tester tester = new Tester();
         Tester2 tester2 = new Tester2();
 
-        C c = RegisterHandler.getRegisterForId(id).pullModule(C.class.getName());
+        C c = register.pullModule(C.class.getName());
+
         c.higher();
+        c.howMuch();
 
         int longer = 0;
 
@@ -29,6 +33,5 @@ public class Main {
 
             longer++;
         }
-
     }
 }

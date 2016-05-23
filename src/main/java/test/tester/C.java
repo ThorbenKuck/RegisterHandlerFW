@@ -16,7 +16,7 @@ public class C {
     }
 
     public void howMuch() {
-        System.out.println("Ich zähle " + counter);
+        System.out.println("$ Ich zähle " + counter);
     }
 
 }

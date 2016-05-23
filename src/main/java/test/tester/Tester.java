@@ -12,7 +12,7 @@ public class Tester {
     }
 
     public void run() {
-        C c = register.pullModule(C.class.getName());
+        C c = register.fetchAndGetModuleFromPipe(C.class.getName());
         c.howMuch();
         c.higher();
         register.pushModuleToRegister(C.class.getName() , c);
