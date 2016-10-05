@@ -22,14 +22,11 @@ public class Main {
         c.higher();
         c.howMuch();
 
-        int longer = 0;
-
-        while(longer < 4) {
+        for(int i = 0 ; i < 4 ; i++) {
 
             tester.run();
             tester2.run();
 
-            longer++;
         }
     }
 }
