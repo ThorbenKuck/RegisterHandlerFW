@@ -1,6 +1,6 @@
 package test;
 
-import templates.RegisterTemplate;
+import de.thorbenkuck.rhfw.templates.RegisterTemplate;
 import test.tester.A;
 import test.tester.C;
 

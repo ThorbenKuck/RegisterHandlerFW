@@ -1,6 +1,6 @@
-package pipe;
+package de.thorbenkuck.rhfw.pipe;
 
-import handler.AnnotationScanner;
+import de.thorbenkuck.rhfw.handler.AnnotationScanner;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

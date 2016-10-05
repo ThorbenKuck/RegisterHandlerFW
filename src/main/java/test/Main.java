@@ -1,9 +1,7 @@
 package test;
 
-import handler.RegisterHandler;
-import handler.register.Register;
-import handler.register.RegisterID;
-import test.tester.A;
+import de.thorbenkuck.rhfw.handler.RegisterHandler;
+import de.thorbenkuck.rhfw.handler.register.Register;
 import test.tester.C;
 import test.tester.Tester;
 import test.tester.Tester2;

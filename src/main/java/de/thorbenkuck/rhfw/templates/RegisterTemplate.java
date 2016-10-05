@@ -1,4 +1,4 @@
-package templates;
+package de.thorbenkuck.rhfw.templates;
 
 import java.util.ArrayList;
 import java.util.List;

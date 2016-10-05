@@ -1,9 +1,8 @@
-package handler.register;
+package de.thorbenkuck.rhfw.handler.register;
 
-import pipe.DataOutputPipe;
+import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 

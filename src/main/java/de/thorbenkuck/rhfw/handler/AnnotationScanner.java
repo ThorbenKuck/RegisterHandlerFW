@@ -1,7 +1,7 @@
-package handler;
+package de.thorbenkuck.rhfw.handler;
 
-import annotations.RegisterModule;
-import handler.scanner.PathScanner;
+import de.thorbenkuck.rhfw.annotations.RegisterModule;
+import de.thorbenkuck.rhfw.handler.scanner.PathScanner;
 
 import java.util.ArrayList;
 import java.util.List;

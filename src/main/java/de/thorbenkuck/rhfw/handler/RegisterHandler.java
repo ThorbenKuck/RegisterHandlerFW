@@ -1,8 +1,8 @@
-package handler;
+package de.thorbenkuck.rhfw.handler;
 
-import handler.register.Register;
-import handler.register.RegisterID;
-import templates.RegisterTemplate;
+import de.thorbenkuck.rhfw.handler.register.Register;
+import de.thorbenkuck.rhfw.handler.register.RegisterID;
+import de.thorbenkuck.rhfw.templates.RegisterTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;

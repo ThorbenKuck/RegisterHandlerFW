@@ -1,4 +1,4 @@
-package annotations;
+package de.thorbenkuck.rhfw.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

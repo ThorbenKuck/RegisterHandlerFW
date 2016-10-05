@@ -1,6 +1,6 @@
 package test.tester;
 
-import annotations.RegisterModule;
+import de.thorbenkuck.rhfw.annotations.RegisterModule;
 
 @RegisterModule
 public class B {

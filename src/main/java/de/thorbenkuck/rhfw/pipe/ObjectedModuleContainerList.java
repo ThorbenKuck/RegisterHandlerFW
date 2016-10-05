@@ -1,4 +1,4 @@
-package pipe;
+package de.thorbenkuck.rhfw.pipe;
 
 import java.util.Collections;
 import java.util.HashMap;

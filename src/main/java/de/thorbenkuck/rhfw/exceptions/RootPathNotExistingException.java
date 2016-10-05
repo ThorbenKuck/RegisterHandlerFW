@@ -1,4 +1,4 @@
-package exceptions;
+package de.thorbenkuck.rhfw.exceptions;
 
 import java.io.FileNotFoundException;
 

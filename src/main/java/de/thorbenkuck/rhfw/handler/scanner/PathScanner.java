@@ -1,4 +1,4 @@
-package handler.scanner;
+package de.thorbenkuck.rhfw.handler.scanner;
 
 import java.io.File;
 import java.net.URL;

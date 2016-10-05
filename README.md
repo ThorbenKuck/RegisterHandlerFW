@@ -1,12 +1,12 @@
 # README #
 
 ### What is the RegisterHandler framework?
-* The RegisterHandler framework is meant for Dependency-Injection, as well as module-control. It can create Registers and share instances of objects over multiple procedures, without the need of static atributes, or sharing instances of Objects.
+* The RegisterHandler framework is meant for Dependency-Injection, as well as module-control. It can create Registers and share instances of objects over multiple procedures, without the need of static attributes, or sharing instances of Objects.
 * More comes later ... 
 
 ### What is this repository for? ###
 
-* In this repository youll find a framework, called RegisterHandler.
+* In this repository you'll find a framework, called RegisterHandler.
 * V.0.1
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
