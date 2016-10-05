@@ -10,6 +10,9 @@
 * V.0.1
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
+### If the tests don't work... ###
+... make sure, that the depending libraries are globally excessive for JUnit!
+
 ### How do I get set up? ###
 
 * Clone -> run gradlewrapper.

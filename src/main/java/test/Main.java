@@ -10,8 +10,6 @@ import test.tester.Tester2;
 public class Main {
     public static void main(String[] args) {
 
-        RegisterHandler.setScanRootPackage("test");
-
         Register register = RegisterHandler.pullAndGetNewRegister(new TestTemplate());
 
         Tester tester = new Tester();
