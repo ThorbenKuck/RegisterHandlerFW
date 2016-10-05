@@ -1,27 +1,29 @@
 # README #
 
-### What is the RegisterHandler framework?
-* The RegisterHandler framework is meant for Dependency-Injection, as well as module-control. It can create Registers and share instances of objects over multiple procedures, without the need of static attributes, or sharing instances of Objects.
-* More comes later ... 
+## What is the RegisterHandlerFW
+The RegisterHandlerFrameWork (short RegisterHandlerFW or RHFW) is a framework, dedicated to DI (dependency injection), MVP (Model View Presenter principal) and something i like to call the "Register-Pattern", the idea, that instances are bound to Registers and not to procedures.
+However, it is not meant to be used for implicated DI! This framework can not resolve direct dependencies! It is more like a tool for MVP.
 
-### What is this repository for? ###
+## A short example ##
 
-* In this repository you'll find a framework, called RegisterHandler.
-* V.0.1
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+<code></code>
 
-### If the tests don't work... ###
+## Participating ###
+
+## If the tests don't work... ###
 ... make sure, that the depending libraries are globally excessive for JUnit!
 
-### How do I get set up? ###
+## How do I get set up? ###
 
 * Clone -> run gradlewrapper.
 
-### Contribution guidelines ###
+## Contribution guidelines ###
 
-* Pull-Request are never (!) accepted manually! Please let the pull-request be reviewed multiple Times and never accept your own requests.
-* If you want to contribute, please contact me!
+* Pull-Request are never (!) accepted manually! Please let the pull-request be reviewed multiple Times and never accept your own requests (except you are the only contributor).
+* If you want to contribute, check out the WIKI (as soon as it is set up) for stuff like coding-standards.
 
-### Who do I talk to? ###
+## Who do I talk to? ###
 
 * Repo owner (ThorbenKuck) or admin
+
+## Licence ##
