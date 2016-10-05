@@ -35,7 +35,6 @@ public class DataOutputPipe {
     }
 
     public static void add(String name, Object component) {
-        System.out.println();
         if(moduleContainerList.contains(name)) {
             // TODO Exceptionhandling
             return;

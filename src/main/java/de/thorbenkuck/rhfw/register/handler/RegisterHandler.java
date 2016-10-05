@@ -75,7 +75,6 @@ public class RegisterHandler {
     }
 
     public synchronized static RegisterID getRegisterID(String legereID) {
-        System.out.println(boundRegisters.get(legereID).toString());
         return RegisterHandler.boundRegisters.get(legereID);
     }
 }
