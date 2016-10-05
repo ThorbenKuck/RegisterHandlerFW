@@ -1,12 +1,15 @@
 package de.thorbenkuck.rhfw.pipe;
 
 import de.thorbenkuck.rhfw.annotations.RegisterModule;
+import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -87,20 +90,15 @@ public class DataOutputPipe {
         fastClasspathScanner.matchClassesWithAnnotation(RegisterModule.class, aClass -> {});
 
         ScanResult scanResult = fastClasspathScanner.scan();
-        List<String> names = scanResult.getNamesOfClassesWithAnnotation(RegisterModule.class);
+        HashSet<String> names = new HashSet<>(scanResult.getNamesOfClassesWithAnnotation(RegisterModule.class));
+        fastClasspathScanner.matchClassesImplementing(RegisterModuleInterface.class, aClass -> {});
+        scanResult = fastClasspathScanner.scan();
+        names.addAll(scanResult.getNamesOfClassesImplementing(RegisterModuleInterface.class));
         List<Class<?>> allModules = names.stream().map((Function<String, Class<?>>) DataOutputPipe::instantiateClass).collect(Collectors.toList());
 
-        int numberAllModules = allModules.size();
-
-        /* Warum nicht foreach?
-         *
-         * Es gibt mehrere Stellen, an denen die Listen iterriert werden. Manchmal 2 oder mehr gleichzeitig.
-         * Wenn an jeder Stelle eine foreach schleife verwendet werden würde, würder der Listeninterne Interator ziemlich durcheinander kommen.
-         * Deswegen nutzen wir zum Iterieren der Listen besser normale for-schleifen.
-         */
-        for (Class<?> allModule : allModules) {
+        for (Class<?> module : allModules) {
             try {
-                DataOutputPipe.add(allModule.getName(), allModule.newInstance());
+                DataOutputPipe.add(module.getName(), module.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
