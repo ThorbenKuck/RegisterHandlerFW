@@ -28,6 +28,7 @@ Before we can dive into some code, let's first explore some of the key-component
      You can "pull" a register from the RegisterHandler  
     
    * DataOutputPipe  
+   
      The DataOutputPipe contains object, which are either  
      - annoteded with "@RegisterModule" or  
      - implementing the RegisterModuleInterface  
