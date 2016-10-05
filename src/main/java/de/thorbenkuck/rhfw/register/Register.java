@@ -2,6 +2,7 @@ package de.thorbenkuck.rhfw.register;
 
 import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
 
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class Register {
     /**
      * Modules, that this register pulled / fetched.
      */
-    private HashMap<String, Object> moduleContainerList;
+    private HashMap<String, Object> moduleContainerList = new HashMap<>();
 
     /**
      * Up on creating a new Register, the Register instances 3 things:
@@ -42,7 +43,6 @@ public class Register {
      * All these things cooperate with one another.
      */
     public Register() {
-        moduleContainerList = new HashMap<>();
         registerId = new RegisterID();
         dataOutputPipe = DataOutputPipe.getInstance();
     }
@@ -156,33 +156,44 @@ public class Register {
     }
 
     // TODO
-    public void removeModule() {
-
+    public void removeModule(String className) {
+        moduleContainerList.remove(className);
     }
 
     private synchronized Object cloneObject(Object object) {
+        if(!(object instanceof Serializable)) {
+            return primitiveClone(object);
+        } else {
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(baos);
+                oos.writeObject(object);
+                ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                return ois.readObject();
+            } catch (ClassNotFoundException | IOException e) {
+                // TODO-Later Exception-Handling
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private synchronized Object primitiveClone(Object object) {
         try {
-
             Object clone = object.getClass().newInstance();
-
             for (Field field : object.getClass().getDeclaredFields()) {
-
                 field.setAccessible(true);
-
                 if(field.get(object) == null || Modifier.isFinal(field.getModifiers())) {
                     continue;
                 }
-
                 if(field.getType().isPrimitive() || field.getType().equals(String.class)
                         || field.getType().getSuperclass().equals(Number.class)
                         || field.getType().equals(Boolean.class)) {
 
                     field.set(clone, field.get(object));
-
                 } else {
-
                     Object childObj = field.get(object);
-
                     if(childObj == object) {
                         field.set(clone, clone);
                     } else {
@@ -192,6 +203,7 @@ public class Register {
             }
             return clone;
         } catch(Exception e) {
+            // TODO-Later Exception-Handling
             return null;
         }
     }
