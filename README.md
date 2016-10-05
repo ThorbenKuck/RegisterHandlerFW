@@ -13,53 +13,72 @@ Before we can dive into some code, let's first explore some of the key-component
 
    * Register
 
-    A Register is a main Container for sharing object with other procedures.
-    It provides a closed eco-system for objects (like a global cache).
+   A Register is a main Container for sharing object with other procedures.
+   It provides a closed eco-system for objects (like a global cache).
     
    * RegisterID
    
-    The RegisterID is the the identifier for a register
+   The RegisterID is the the identifier for a register
     
    * RegisterHandler
    
-    The RegisterHandler is a centralised Object for: 
-    - creating registers
-    - binding registers to custom (legere) ID's
-    You can "pull" a register from the RegisterHandler
+   The RegisterHandler is a centralised Object for: 
+   
+   - creating registers
+   
+   - binding registers to custom (leger) ID's
+   
+   You can "pull" a register from the RegisterHandler
     
    * DataOutputPipe
    
-    The DataOutputPipe contains object, which are either 
-    - annoteded with "@RegisterModule" or
-    - implementing the RegisterModuleInterface
-    You can add and get Module's from it.
-    NOTE: If you directly access the DataOutputPipe, you might encounter problems, like overriding instances
+   The DataOutputPipe contains object, which are either 
+   
+   - annoteded with "@RegisterModule" or
+   
+   - implementing the RegisterModuleInterface
+   
+   You can add and get Module's from it.
+   
+   NOTE: If you directly access the DataOutputPipe, you might encounter problems, like overriding instances
     
    * There is more ...
    
 But to some Code. If you want to try it out for yourself, you can go inside the provided example (src.main.java.example.Main)
 
 The basic principle is the following:  
+
 1. Get a register  
+
 2. get a object  
+
 3. modify this object  
+
 4. push it back to the register to make it accessible for all procedures, using the same Register
 
 To get a register we have multiple options, but i will go with the easiest on here:  
 <code>Register register = RegisterHandler.pullAndGetNewRegister();</code>  
 We now have a Register, which will provide us with cross-procedural-accessibility to certain Objects
 
-To make it accessible to other procedures, we have 2 options.  
+To make it accessible to other procedures, we have 2 options.
+
 1. share the RegisterID  
+
     * <code>register.getRegisterId()</code>
+    
 2. bind it to a "legerID"  
+
     * <code>RegisterHandler.bindRegister("our_leger_id", register.getRegisterId())</code>
     
 If we have done that, we can now get Object's from the Register. We also have 2 Options here:  
+
 1. fetchModule
+
     * Tells the register to pull an object from the DataOutputPipe and safe it, but __only__
     if it is not already contained within the Register
+    
 2. pullModule
+
     * Tells the register to pull an object from the DataOutputPipe and override any existing
     one with the same Class-Name
     
