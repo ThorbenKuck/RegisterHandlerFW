@@ -47,16 +47,18 @@ The basic principle is the following:
 4. push it back to the register to make it accessible for all procedures, using the same Register
 
 To get a register we have multiple options, but i will go with the easiest on here:  
-<code>Register register = RegisterHandler.pullAndGetNewRegister();</code>  
+```Java
+Register register = RegisterHandler.pullAndGetNewRegister();
+```  
 We now have a Register, which will provide us with cross-procedural-accessibility to certain Objects
 
 To make it accessible to other procedures, we have 2 options.
 
 1. share the RegisterID  
-    * <code>register.getRegisterId()</code>  
+    * ``register.getRegisterId()`` 
     
 2. bind it to a "legerID"  
-    * <code>RegisterHandler.bindRegister("our_leger_id", register.getRegisterId())</code>
+    * ``RegisterHandler.bindRegister("our_leger_id", register.getRegisterId())``
     
 If we have done that, we can now get Object's from the Register. We also have 2 Options here:  
 
@@ -70,28 +72,39 @@ If we have done that, we can now get Object's from the Register. We also have 2 
     
 Let's assume now, we have the following class:
 
-<code>
-public class Tester implements RegisterModuleInterface {<br>  
-    private int i = 0;<br>  
-    public int getI() {<br>  
-        return this.i;<br>  
-     }<br>
-     public void setI(int newI) {<br>  
-        this.i = newI;<br>  
-     }<br>  
-}</code>
+```Java
+public class Tester implements RegisterModuleInterface {
+    private int i = 0;
+    public int getI() {
+        return this.i;
+     }
+     public void setI(int newI) {
+        this.i = newI;
+     }
+}
+```
 
 We now do the following: 
  
 first we get the current object from the register  
-<code>Tester t = register.fetchAndGetModuleFromPipe(Tester.class.getName())</code>  
+```Java
+Tester t = register.fetchAndGetModuleFromPipe(Tester.class.getName());
+``` 
 then we set i from Tester to 3  
-<code>t.setI(3)</code>  
+```Java
+t.setI(3)
+```  
 and push it back up to the register  
-<code>register.pushModuleToRegister(t);</code>  
+```Java
+register.pushModuleToRegister(t);
+```  
 The next procedure, which is using the same Register, will now have the same Object.  
 So, for example, let's assume some other procedure uses the Tester-Class from this Register.  
-The call of <code>getI()</code> would result in __3__
+The call of 
+```Java
+t.getI()
+```
+would result in __3__
 
 ## Current State ##
 __*(Alpha) v.0.1*__
