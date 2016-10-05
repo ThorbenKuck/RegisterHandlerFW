@@ -1,9 +1,8 @@
 package test.tester;
 
-import de.thorbenkuck.rhfw.annotations.RegisterModule;
+import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
 
-@RegisterModule
-public class A {
+public class A implements RegisterModuleInterface {
 
     private String name;
 
