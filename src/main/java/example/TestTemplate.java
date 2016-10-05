@@ -1,8 +1,8 @@
-package test;
+package example;
 
 import de.thorbenkuck.rhfw.templates.RegisterTemplate;
-import test.tester.A;
-import test.tester.C;
+import example.tester.A;
+import example.tester.C;
 
 public class TestTemplate extends RegisterTemplate {
 

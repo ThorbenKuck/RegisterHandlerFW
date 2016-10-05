@@ -1,7 +1,7 @@
 package de.thorbenkuck.rhfw.registers;
 
-import de.thorbenkuck.rhfw.handler.RegisterHandler;
-import de.thorbenkuck.rhfw.handler.register.Register;
+import de.thorbenkuck.rhfw.register.handler.RegisterHandler;
+import de.thorbenkuck.rhfw.register.Register;
 import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import static junit.framework.TestCase.assertNotSame;
 
 public class RegisterClassTest {
 
-    private static String legereID = "test";
+    private static String legereID = "example";
 
     private static int testInteger = 10;
 

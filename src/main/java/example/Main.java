@@ -1,10 +1,10 @@
-package test;
+package example;
 
-import de.thorbenkuck.rhfw.handler.RegisterHandler;
-import de.thorbenkuck.rhfw.handler.register.Register;
-import test.tester.C;
-import test.tester.Tester;
-import test.tester.Tester2;
+import de.thorbenkuck.rhfw.register.handler.RegisterHandler;
+import de.thorbenkuck.rhfw.register.Register;
+import example.tester.C;
+import example.tester.Tester;
+import example.tester.Tester2;
 
 
 public class Main {

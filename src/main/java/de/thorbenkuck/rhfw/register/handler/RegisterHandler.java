@@ -1,10 +1,9 @@
-package de.thorbenkuck.rhfw.handler;
+package de.thorbenkuck.rhfw.register.handler;
 
-import de.thorbenkuck.rhfw.handler.register.Register;
-import de.thorbenkuck.rhfw.handler.register.RegisterID;
+import de.thorbenkuck.rhfw.register.Register;
+import de.thorbenkuck.rhfw.register.RegisterID;
 import de.thorbenkuck.rhfw.templates.RegisterTemplate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 

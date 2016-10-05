@@ -1,4 +1,4 @@
-package de.thorbenkuck.rhfw.handler.register;
+package de.thorbenkuck.rhfw.register;
 
 import java.util.ArrayList;
 import java.util.List;

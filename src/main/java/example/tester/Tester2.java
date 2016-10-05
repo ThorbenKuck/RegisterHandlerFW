@@ -1,7 +1,7 @@
-package test.tester;
+package example.tester;
 
-import de.thorbenkuck.rhfw.handler.RegisterHandler;
-import de.thorbenkuck.rhfw.handler.register.Register;
+import de.thorbenkuck.rhfw.register.handler.RegisterHandler;
+import de.thorbenkuck.rhfw.register.Register;
 
 public class Tester2 {
 

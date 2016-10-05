@@ -1,4 +1,4 @@
-package test.tester;
+package example.tester;
 
 import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
 
