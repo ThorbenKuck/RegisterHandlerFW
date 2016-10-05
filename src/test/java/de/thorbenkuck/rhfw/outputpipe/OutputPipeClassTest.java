@@ -1,7 +1,8 @@
-package outputpipe;
+package de.thorbenkuck.rhfw.outputpipe;
 
 import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
 
@@ -15,14 +16,14 @@ public class OutputPipeClassTest {
         dataOutputPipe = DataOutputPipe.getInstance();
     }
 
-    @org.junit.Test
+    @Test
     public void existsTest() {
         assertNotNull(dataOutputPipe);
     }
 
-    @org.junit.Test
+    @Test
     public void testGetClassTestFromPipe() {
-        Test test = dataOutputPipe.getModule(Test.class.getName());
+        Tester tester = dataOutputPipe.getModule(Tester.class.getName());
     }
 
 }
