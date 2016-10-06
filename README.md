@@ -116,7 +116,9 @@ __*(Alpha) v.0.1*__
 
 ## How do I get set up? ###
 
-* Clone -> run gradlewrapper.
+* Clone -> run gradlewrapper.  
+* If you want to use it as a jar... well... jeah, i am pretty new to this stuff.. maybe someone can explain in detail how to do this. However, you should not include the JUnit-Test's and not the example package. You should just include the package:  
+__src.main.java.de.thorbenkuck.rhfw__
 
 ## Contribution guidelines ###
 
@@ -127,4 +129,6 @@ __*(Alpha) v.0.1*__
 
 * Repo owner (ThorbenKuck) or admin
 
-## Licence ##
+## License ##
+ 
+MIT License
