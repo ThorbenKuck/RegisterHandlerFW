@@ -38,7 +38,12 @@ public class RegisterID {
         return currentRegisterID;
     }
 
-    void randomID() {
+    @Override
+    public boolean equals(Object object) {
+        return object instanceof RegisterID && object.toString().equals(toString());
+    }
+
+    private void randomID() {
         String toTest = UUID.randomUUID().toString();
         while(allRegisterIDs.contains(toTest)) {
             toTest = UUID.randomUUID().toString();

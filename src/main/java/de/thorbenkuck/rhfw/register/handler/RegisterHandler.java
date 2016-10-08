@@ -14,7 +14,12 @@ public class RegisterHandler {
     private static HashMap<String, RegisterID> boundRegisters = new HashMap<>();
 
     public static boolean registerIDTaken(RegisterID id) {
-        return RegisterHandler.registerList.containsKey(id);
+        for(RegisterID registerID : registerList.keySet()) {
+            if(registerID.equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean registerBound(String legereID) {
@@ -28,7 +33,7 @@ public class RegisterHandler {
     }
 
     public static Register pullAndGetNewRegister() {
-        return RegisterHandler.registerList.get(pullNewRegister());
+        return getFromRegisterList(pullNewRegister());
     }
 
     public static RegisterID pullNewRegister(RegisterTemplate template) {
@@ -38,15 +43,15 @@ public class RegisterHandler {
         List<String> classesToImplement = null;
         String legereId;
 
-        if(!template.classesToImplementEmpyt()) {
-            if(template.autoImport()) {
+        if (!template.classesToImplementEmpyt()) {
+            if (template.autoImport()) {
                 classesToImplement = template.getClassesToImplement();
                 for (String s : classesToImplement) {
                     RegisterHandler.registerList.get(id).fetchModuleFromPipe(s);
                 }
             }
         }
-        if(template.getLegereId() != null) {
+        if (template.getLegereId() != null) {
             legereId = template.getLegereId();
             bindRegister(legereId, newRegister.getRegisterId());
         }
@@ -55,11 +60,11 @@ public class RegisterHandler {
     }
 
     public static Register pullAndGetNewRegister(RegisterTemplate template) {
-        return RegisterHandler.registerList.get(pullNewRegister(template));
+        return getFromRegisterList(pullNewRegister(template));
     }
 
     public static <T> T getModuleFromRegister(RegisterID registerID, String className) {
-        return RegisterHandler.registerList.get(registerID).pullModule(className);
+        return getRegisterForId(registerID).pullModule(className);
     }
 
     public static <T> T getModuleFromRegister(String legereID, String className) {
@@ -67,7 +72,7 @@ public class RegisterHandler {
     }
 
     public static Register getRegisterForId(RegisterID registerID) {
-        return RegisterHandler.registerList.get(registerID);
+        return getFromRegisterList(registerID);
     }
 
     public static Register getRegisterForId(String legereId) {
@@ -84,5 +89,14 @@ public class RegisterHandler {
 
     public synchronized static RegisterID getRegisterID(String legereID) {
         return RegisterHandler.boundRegisters.get(legereID);
+    }
+
+    private static Register getFromRegisterList(RegisterID id) {
+        for (RegisterID currentRegisterID : registerList.keySet()) {
+            if(currentRegisterID.equals(id)) {
+                return RegisterHandler.registerList.get(currentRegisterID);
+            }
+        }
+        throw new IllegalArgumentException();
     }
 }

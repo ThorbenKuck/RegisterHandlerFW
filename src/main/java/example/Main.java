@@ -12,6 +12,8 @@ public class Main {
 
         Register register = RegisterHandler.pullAndGetNewRegister(new TestTemplate());
 
+        System.out.println(register);
+
         Tester tester = new Tester();
         Tester2 tester2 = new Tester2();
 
