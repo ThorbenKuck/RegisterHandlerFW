@@ -78,6 +78,10 @@ public class RegisterHandler {
         RegisterHandler.boundRegisters.put(legereID, id);
     }
 
+    public static void bindRegister(String legereID, Register register) {
+        bindRegister(legereID, register.getRegisterId());
+    }
+
     public synchronized static RegisterID getRegisterID(String legereID) {
         return RegisterHandler.boundRegisters.get(legereID);
     }
