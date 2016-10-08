@@ -19,12 +19,8 @@ public class RegisterID {
      * @param toCopy
      */
     public RegisterID(RegisterID toCopy) {
-        if(RegisterID.allRegisterIDs.contains(toCopy.toString())) {
-            this.currentRegisterID = toCopy.toString();
-        } else {
-            // TODO-Later Exception-Handling
-            System.out.println("NO! This is not allowed.. Also, here will be thrown an exception!");
-        }
+        this();
+        this.currentRegisterID = toCopy.toString();
     }
 
     public RegisterID(Register toCopy) {
