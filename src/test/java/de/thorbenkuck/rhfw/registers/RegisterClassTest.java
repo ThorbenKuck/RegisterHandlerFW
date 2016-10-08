@@ -1,13 +1,12 @@
 package de.thorbenkuck.rhfw.registers;
 
+import de.thorbenkuck.rhfw.register.RegisterID;
 import de.thorbenkuck.rhfw.register.handler.RegisterHandler;
 import de.thorbenkuck.rhfw.register.Register;
 import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNotSame;
+import static junit.framework.TestCase.*;
 
 public class RegisterClassTest {
 
@@ -41,6 +40,19 @@ public class RegisterClassTest {
         Register register1 = RegisterHandler.pullAndGetNewRegister();
         Register register2 = RegisterHandler.pullAndGetNewRegister();
         assertNotSame(register1, register2);
+    }
+
+    @Test
+    public void getID() {
+        RegisterID id = RegisterHandler.pullNewRegister();
+        assertTrue(RegisterHandler.registerIDTaken(id));
+    }
+
+    @Test
+    public void getIdFollowedByRegister() {
+        RegisterID id = RegisterHandler.pullNewRegister();
+        Register register = RegisterHandler.getRegisterForId(id);
+        assertNotNull(register);
     }
 
     @Test
