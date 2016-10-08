@@ -62,6 +62,10 @@ public class RegisterHandler {
         return RegisterHandler.registerList.get(registerID).pullModule(className);
     }
 
+    public static <T> T getModuleFromRegister(String legereID, String className) {
+        return getModuleFromRegister(getRegisterID(legereID), className);
+    }
+
     public static Register getRegisterForId(RegisterID registerID) {
         return RegisterHandler.registerList.get(registerID);
     }
