@@ -152,7 +152,7 @@ public class Register {
      * @return RegisterID
      */
     public RegisterID getRegisterId() {
-        return registerId;
+        return new RegisterID(registerId);
     }
 
     // TODO
