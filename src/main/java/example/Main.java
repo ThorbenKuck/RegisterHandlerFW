@@ -39,6 +39,6 @@ public class Main {
 		// This is alternative.
 		// It will not help the test, neither is it necessary for the test to work.
 		// The following line simply shows the multiton-behavior for the DataOutputPipe
-		DataOutputPipe.access().loadAnnotatedModules();
+		DataOutputPipe.access(Register.class).loadAnnotatedModules();
 	}
 }

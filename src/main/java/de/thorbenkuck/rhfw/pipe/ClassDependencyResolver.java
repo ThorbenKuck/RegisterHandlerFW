@@ -2,6 +2,7 @@ package de.thorbenkuck.rhfw.pipe;
 
 import de.thorbenkuck.rhfw.annotations.RegisterModule;
 import de.thorbenkuck.rhfw.exceptions.CriticalErrorException;
+import de.thorbenkuck.rhfw.exceptions.NoSuitableConstructorException;
 import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,6 @@ class ClassDependencyResolver implements DependencyResolver {
 	private Set<Class> toCreate = new HashSet<>();
 	private Set<Class> abounded = new HashSet<>();
 	private Logger logger = LogManager.getLogger(getClass());
-	private CriticalErrorException lastCriticalException;
 
 	public ClassDependencyResolver(DataOutputPipe dataOutputPipe) {
 		this.dataOutputPipe = dataOutputPipe;
@@ -76,13 +76,16 @@ class ClassDependencyResolver implements DependencyResolver {
 	}
 
 	private void checkForError() {
+		NoSuitableConstructorException noSuitableConstructorException = null;
 		if(toCreate.size() > 0) {
-			if(lastCriticalException != null) {
-				throw lastCriticalException;
-			} else {
-				System.err.println("Internal error!");
-				System.exit(1);
+			for(Class c : toCreate) {
+				if(noSuitableConstructorException == null) {
+					noSuitableConstructorException = new NoSuitableConstructorException("No suitable constructor found for Class: " + c);
+				} else {
+					noSuitableConstructorException = new NoSuitableConstructorException("No suitable constructor found for Class: " + c, noSuitableConstructorException);
+				}
 			}
+			throw new NoSuitableConstructorException("Could not resolve dependencies", noSuitableConstructorException);
 		}
 	}
 
@@ -100,9 +103,10 @@ class ClassDependencyResolver implements DependencyResolver {
 			}
 			return false;
 		} catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+			logger.debug("Skipped Class [" + clazz + "]");
 			return false;
 		} catch (CriticalErrorException e) {
-			lastCriticalException = e;
+			logger.debug("Skipped Class [" + clazz + "]");
 			return false;
 		}
 	}
