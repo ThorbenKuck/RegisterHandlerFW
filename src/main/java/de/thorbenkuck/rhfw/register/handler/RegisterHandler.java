@@ -22,8 +22,8 @@ public class RegisterHandler {
         return false;
     }
 
-    public static boolean registerBound(String legereID) {
-        return RegisterHandler.boundRegisters.containsKey(legereID);
+    public static boolean registerBound(String legerID) {
+        return RegisterHandler.boundRegisters.containsKey(legerID);
     }
 
     public static RegisterID pullNewRegister() {
@@ -41,7 +41,7 @@ public class RegisterHandler {
         RegisterID id = newRegister.getRegisterId();
         RegisterHandler.registerList.put(id, newRegister);
         List<String> classesToImplement = null;
-        String legereId;
+        String legerId;
 
         if (!template.classesToImplementEmpyt()) {
             if (template.autoImport()) {
@@ -51,9 +51,9 @@ public class RegisterHandler {
                 }
             }
         }
-        if (template.getLegereId() != null) {
-            legereId = template.getLegereId();
-            bindRegister(legereId, newRegister.getRegisterId());
+        if (template.getlegerId() != null) {
+            legerId = template.getlegerId();
+            bindRegister(legerId, newRegister.getRegisterId());
         }
 
         return newRegister.getRegisterId();
@@ -67,31 +67,31 @@ public class RegisterHandler {
         return getRegisterForId(registerID).pullModule(className);
     }
 
-    public static <T> T getModuleFromRegister(String legereID, String className) {
-        return getModuleFromRegister(getRegisterID(legereID), className);
+    public static <T> T getModuleFromRegister(String legerID, String className) {
+        return getModuleFromRegister(getRegisterID(legerID), className);
     }
 
     public static Register getRegisterForId(RegisterID registerID) {
         return getFromRegisterList(registerID);
     }
 
-    public static Register getRegisterForId(String legereId) {
-        return getRegisterForId(getRegisterID(legereId));
+    public static Register getRegisterForId(String legerId) {
+        return getRegisterForId(getRegisterID(legerId));
     }
 
-    public static void bindRegister(String legereID, RegisterID id) {
-        RegisterHandler.boundRegisters.put(legereID, id);
+    public static void bindRegister(String legerID, RegisterID id) {
+        RegisterHandler.boundRegisters.put(legerID, id);
     }
 
-    public static void bindRegister(String legereID, Register register) {
-        bindRegister(legereID, register.getRegisterId());
+    public static void bindRegister(String legerID, Register register) {
+        bindRegister(legerID, register.getRegisterId());
     }
 
-    public synchronized static RegisterID getRegisterID(String legereID) {
-        if(RegisterHandler.boundRegisters.get(legereID) == null) {
-			throw new IllegalArgumentException("No Register exists for legereID " + legereID);
+    public synchronized static RegisterID getRegisterID(String legerID) {
+        if(RegisterHandler.boundRegisters.get(legerID) == null) {
+			throw new IllegalArgumentException("No Register exists for legerID " + legerID);
         }
-        return RegisterHandler.boundRegisters.get(legereID);
+        return RegisterHandler.boundRegisters.get(legerID);
     }
 
     private static Register getFromRegisterList(RegisterID id) {

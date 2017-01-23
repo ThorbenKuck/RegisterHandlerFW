@@ -7,7 +7,7 @@ import example.tester.C;
 public class TestTemplate extends RegisterTemplate {
 
     public TestTemplate() {
-        setLegereId("1");
+        setlegerId("1");
         addToAutoPull(C.class.getName());
         addToAutoPull(A.class.getName());
         setAutoPull(true);

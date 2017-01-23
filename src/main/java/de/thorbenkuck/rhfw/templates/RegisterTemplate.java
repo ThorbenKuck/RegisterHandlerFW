@@ -6,11 +6,11 @@ import java.util.List;
 public abstract class RegisterTemplate {
 
     private List<String> classesToImplement = new ArrayList<>();
-    private String legereId;
+    private String legerId;
     private boolean autoImport = true;
 
     public RegisterTemplate() {
-        legereId = null;
+        legerId = null;
         autoImport = true;
     }
 
@@ -22,12 +22,12 @@ public abstract class RegisterTemplate {
         classesToImplement.add(className);
     }
 
-    public void setLegereId(String legereId) {
-        this.legereId = legereId;
+    public void setlegerId(String legerId) {
+        this.legerId = legerId;
     }
 
-    public String getLegereId() {
-        return this.legereId;
+    public String getlegerId() {
+        return this.legerId;
     }
 
     public List<String> getClassesToImplement() {

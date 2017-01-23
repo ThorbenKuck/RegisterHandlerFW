@@ -13,9 +13,9 @@ public class Main {
     public static void main(String[] args) {
     	setup();
 
-        // Register register = RegisterHandler.pullAndGetNewRegister(new TestTemplate());
+        Register register = RegisterHandler.pullAndGetNewRegister(new TestTemplate());
 
-        // prepareTest(register);
+        prepareTest(register);
 
         Tester tester = new Tester();
         Tester2 tester2 = new Tester2();

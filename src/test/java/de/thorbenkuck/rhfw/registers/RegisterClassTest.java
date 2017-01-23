@@ -10,7 +10,7 @@ import static junit.framework.TestCase.*;
 
 public class RegisterClassTest {
 
-    private static String legereID = "example";
+    private static String legerID = "example";
 
     private static int testInteger = 10;
 
@@ -30,8 +30,8 @@ public class RegisterClassTest {
     @Test
     public void testGetBoundRegister() {
         Register register1 = RegisterHandler.pullAndGetNewRegister();
-        RegisterHandler.bindRegister(legereID, register1.getRegisterId());
-        Register register2 = RegisterHandler.getRegisterForId(legereID);
+        RegisterHandler.bindRegister(legerID, register1.getRegisterId());
+        Register register2 = RegisterHandler.getRegisterForId(legerID);
         assertEquals(register1, register2);
     }
 
