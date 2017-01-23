@@ -7,12 +7,12 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-class ConstructorFinder<T> {
+class ConstructorFinder {
 
-	private Class<T> clazz;
+	private Class clazz;
 	private List<Constructor> excluded = new ArrayList<>();
 
-	ConstructorFinder(Class<T> clazz) {
+	ConstructorFinder(Class clazz) {
 		this.clazz = clazz;
 	}
 
