@@ -12,8 +12,8 @@ public class OutputPipeClassTest {
 
     @BeforeClass
     public static void setup() {
-        DataOutputPipe.loadAnnotatedModules();
         dataOutputPipe = DataOutputPipe.getInstance();
+        dataOutputPipe.loadAnnotatedModules();
     }
 
     @Test

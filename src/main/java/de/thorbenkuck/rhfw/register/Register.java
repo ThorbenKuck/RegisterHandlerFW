@@ -44,7 +44,7 @@ public class Register {
      */
     public Register() {
         registerId = new RegisterID();
-        dataOutputPipe = DataOutputPipe.getInstance();
+        dataOutputPipe = getDataOutputPipe();
     }
 
     /**
@@ -207,4 +207,14 @@ public class Register {
             return null;
         }
     }
+
+	private static synchronized DataOutputPipe getDataOutputPipe() {
+    	if(!DataOutputPipe.exists(Register.class)) {
+			DataOutputPipe dataOutputPipe = DataOutputPipe.access(Register.class);
+			dataOutputPipe.loadAnnotatedModules();
+			return dataOutputPipe;
+		} else {
+    		return DataOutputPipe.access(Register.class);
+		}
+	}
 }

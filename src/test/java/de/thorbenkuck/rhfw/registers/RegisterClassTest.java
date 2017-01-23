@@ -57,7 +57,7 @@ public class RegisterClassTest {
 
     @Test
     public void asynchronusCallOfSameObject() {
-        DataOutputPipe.loadAnnotatedModules();
+        DataOutputPipe.getInstance().loadAnnotatedModules();
         Register register1 = RegisterHandler.pullAndGetNewRegister();
         Register register2 = RegisterHandler.getRegisterForId(register1.getRegisterId());
         Tester t1 = register1.fetchAndGetModuleFromPipe(Tester.class.getName());

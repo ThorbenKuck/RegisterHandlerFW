@@ -1,46 +1,65 @@
 package de.thorbenkuck.rhfw.pipe;
 
-import de.thorbenkuck.rhfw.annotations.RegisterModule;
-import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
+import org.apache.logging.log4j.LogManager;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class DataOutputPipe {
 
-    private static ArrayList<String> dataKeyList = new ArrayList<>();
+    private ObjectedModuleContainerList<String, Object> moduleContainerList = new ObjectedModuleContainerList<>();
+    private Object identifier;
+    private static final HashMap<Object, DataOutputPipe> instance = new HashMap<>();
 
-    private static ObjectedModuleContainerList<String, Object> moduleContainerList = new ObjectedModuleContainerList<>();
+    public DataOutputPipe() {
+    	this("");
+	}
 
-    private static DataOutputPipe instance;
-
-    private DataOutputPipe() {
-
+    public DataOutputPipe(Object identifier) {
+    	this.identifier = identifier;
     }
 
+	@Deprecated
     public static DataOutputPipe getInstance() {
-        if(instance == null) {
-            DataOutputPipe.loadAnnotatedModules();
-            instance = new DataOutputPipe();
-        }
-        return instance;
+		instance.computeIfAbsent("", k -> new DataOutputPipe(""));
+		LogManager.getLogger().warn("The use of DataOutputPipe#getInstance() is discouraged!");
+        return instance.get("");
     }
 
-    public static void add(String name, Object component) {
+    public static DataOutputPipe access() {
+    	return access("main");
+	}
+
+    public static DataOutputPipe access(Object key) {
+		instance.computeIfAbsent(key, k -> new DataOutputPipe(key));
+		return instance.get(key);
+	}
+
+	public static boolean exists(Object key) {
+    	return instance.get(key) != null;
+	}
+
+	public static boolean accessable(Object key) {
+		// TODO
+		return exists(key);
+	}
+
+    public Collection<Object> getModules() {
+        return moduleContainerList.getValues();
+    }
+
+    public void add(String name, Object component) {
         if(moduleContainerList.contains(name)) {
             // TODO Exceptionhandling
             return;
         }
-        DataOutputPipe.moduleContainerList.addObjectedModule(name, component);
-        DataOutputPipe.dataKeyList.add(name);
+        moduleContainerList.addObjectedModule(name, component);
     }
+
+    public void add(Object component) {
+    	add(component.getClass().getName(), component);
+	}
 
 
     /**
@@ -50,71 +69,31 @@ public class DataOutputPipe {
      * @param <T>
      * @return
      */
+    @Deprecated
     public <T> T getModule(String name, Class<T> type) {
-        T toReturn = null;
-        Class<?> classToInstance = moduleContainerList.getObjectedModule(name).getClass();
-        String classNameToInstance = classToInstance.getName();
-        try {
-            Class<?> clazz = Class.forName(classNameToInstance);
-            Constructor<?> ctor = clazz.getConstructor();
-            Object object = ctor.newInstance();
-            toReturn = type.cast(object);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return toReturn;
+        return getModule(name);
     }
 
     public <T> T getModule(String name) {
-        Object o = DataOutputPipe.moduleContainerList.getObjectedModule(name);
-        Class<T> type = (Class<T>) o.getClass();
-        return getModule(name, type);
+        Object o = moduleContainerList.getObjectedModule(name);
+        return (T) o;
     }
 
     public Class<?> getType(String name) {
-        return DataOutputPipe.moduleContainerList.getObjectedModule(name).getClass();
+        return moduleContainerList.getObjectedModule(name).getClass();
     }
 
     public ArrayList<String> getAllKeys() {
-        return DataOutputPipe.dataKeyList;
+        return new ArrayList<>(moduleContainerList.getKeys());
     }
 
     public boolean keyInDataOutputPipe(String key) {
-        return DataOutputPipe.dataKeyList.contains(key);
+        return moduleContainerList.getKeys().contains(key);
     }
 
-    public static void loadAnnotatedModules() {
-        FastClasspathScanner fastClasspathScanner = new FastClasspathScanner();
-        fastClasspathScanner.matchClassesWithAnnotation(RegisterModule.class, aClass -> {});
-
-        ScanResult scanResult = fastClasspathScanner.scan();
-        HashSet<String> names = new HashSet<>(scanResult.getNamesOfClassesWithAnnotation(RegisterModule.class));
-        fastClasspathScanner.matchClassesImplementing(RegisterModuleInterface.class, aClass -> {});
-        scanResult = fastClasspathScanner.scan();
-        names.addAll(scanResult.getNamesOfClassesImplementing(RegisterModuleInterface.class));
-        List<Class<?>> allModules = names.stream().map((Function<String, Class<?>>) DataOutputPipe::instantiateClass).collect(Collectors.toList());
-
-        for (Class<?> module : allModules) {
-            try {
-                DataOutputPipe.add(module.getName(), module.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * TODO Exception-Handling
-     * @param className
-     * @return
-     */
-    private static Class<?> instantiateClass(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public void loadAnnotatedModules() {
+    	LogManager.getLogger().info("Loading annotated classes for DataOutputPipe(" + identifier + ")");
+        new ClassDependencyResolver(this).resolve();
     }
 
 }
