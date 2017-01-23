@@ -76,7 +76,7 @@ public class RegisterHandler {
     }
 
     public static Register getRegisterForId(String legereId) {
-        return getRegisterForId(RegisterHandler.boundRegisters.get(legereId));
+        return getRegisterForId(getRegisterID(legereId));
     }
 
     public static void bindRegister(String legereID, RegisterID id) {
@@ -88,6 +88,9 @@ public class RegisterHandler {
     }
 
     public synchronized static RegisterID getRegisterID(String legereID) {
+        if(RegisterHandler.boundRegisters.get(legereID) == null) {
+			throw new IllegalArgumentException("No Register exists for legereID " + legereID);
+        }
         return RegisterHandler.boundRegisters.get(legereID);
     }
 
@@ -97,6 +100,6 @@ public class RegisterHandler {
                 return RegisterHandler.registerList.get(currentRegisterID);
             }
         }
-        throw new IllegalArgumentException();
+		throw new IllegalArgumentException("No Register exists for RegisterID(" + id + ")");
     }
 }
