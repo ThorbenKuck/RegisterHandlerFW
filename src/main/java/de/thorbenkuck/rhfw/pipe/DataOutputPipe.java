@@ -12,7 +12,11 @@ public class DataOutputPipe {
     private Object identifier;
     private static final HashMap<Object, DataOutputPipe> instance = new HashMap<>();
 
-    private DataOutputPipe(Object identifier) {
+    public DataOutputPipe() {
+    	this("");
+	}
+
+    public DataOutputPipe(Object identifier) {
     	this.identifier = identifier;
     }
 
@@ -24,7 +28,7 @@ public class DataOutputPipe {
     }
 
     public static DataOutputPipe access() {
-    	return access("");
+    	return access("main");
 	}
 
     public static DataOutputPipe access(Object key) {
