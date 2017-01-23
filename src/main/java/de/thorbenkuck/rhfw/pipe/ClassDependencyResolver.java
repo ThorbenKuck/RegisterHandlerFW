@@ -3,6 +3,8 @@ package de.thorbenkuck.rhfw.pipe;
 import de.thorbenkuck.rhfw.annotations.RegisterModule;
 import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
 import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
@@ -13,6 +15,7 @@ class ClassDependencyResolver implements DependencyResolver {
 	private DataOutputPipe dataOutputPipe;
 	private ClassFactory classFactory;
 	private Set<Class> toCreate = new HashSet<>();
+	private Logger logger = LogManager.getLogger(getClass());
 
 	public ClassDependencyResolver(DataOutputPipe dataOutputPipe) {
 		this.dataOutputPipe = dataOutputPipe;
@@ -22,23 +25,22 @@ class ClassDependencyResolver implements DependencyResolver {
 	@Override
 	public void resolve() {
 		FastClasspathScanner fastClasspathScanner = new FastClasspathScanner();
-		System.out.println("scanning .. ");
+		logger.info("Started scanning ..");
 		fastClasspathScanner.matchClassesWithAnnotation(RegisterModule.class, aClass -> {
 			if(aClass.getAnnotation(RegisterModule.class).included()) {
 				toCreate.add(aClass);
-				System.out.println("Found class to include: " + aClass);
+				logger.debug("Included class [" + aClass + "]");
 			} else {
-				// TODO: log
-				System.out.println("disabled class : " + aClass);
+				logger.debug("Class [" + aClass + "] disabled via Annotation \"" + RegisterModule.class + "\"");
 			}
 		}).matchClassesImplementing(RegisterModuleInterface.class, implementingClass -> {
 			if(implementingClass.getAnnotation(RegisterModule.class) == null ||
 					(implementingClass.getAnnotation(RegisterModule.class) != null && implementingClass.getAnnotation(RegisterModule.class).included())) {
 				toCreate.add(implementingClass);
-				System.out.println("Found class to include: " + implementingClass);
+				logger.debug("Included Class [" + implementingClass + "]");
 			} else {
 				// TODO: log
-				System.out.println("disabled class : " + implementingClass);
+				logger.debug("Class [" + implementingClass + "] disabled via Annotation \"" + RegisterModule.class + "\"");
 			}
 		}).scan();
 
@@ -60,7 +62,6 @@ class ClassDependencyResolver implements DependencyResolver {
 			Object o = classFactory.create(clazz);
 			if(o != null) {
 				dataOutputPipe.add(clazz.getName(), o);
-				System.out.println("included class: " + clazz);
 				return true;
 			}
 			return false;
