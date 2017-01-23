@@ -35,4 +35,7 @@ class ObjectedModuleContainerList<String, Object> {
 
     boolean contains(String key) { return objectedModuleHashMap.containsKey(key); }
 
+	public List<String> getKeys() {
+		return new ArrayList<>(objectedModuleHashMap.keySet());
+	}
 }

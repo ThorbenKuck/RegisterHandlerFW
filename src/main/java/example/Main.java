@@ -6,12 +6,15 @@ import de.thorbenkuck.rhfw.register.Register;
 import example.tester.C;
 import example.tester.Tester;
 import example.tester.Tester2;
+import org.apache.logging.log4j.core.config.ConfigurationFactory;
 
 
 public class Main {
     public static void main(String[] args) {
 
-        DataOutputPipe.getInstance().loadAnnotatedModules();
+		ConfigurationFactory.setConfigurationFactory(new CustomLog4J2ConfigurationFactory());
+
+        DataOutputPipe.access().loadAnnotatedModules();
 
         Register register = RegisterHandler.pullAndGetNewRegister(new TestTemplate());
 

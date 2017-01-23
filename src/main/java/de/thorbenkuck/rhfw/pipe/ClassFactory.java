@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-class ClassFactory {
+public class ClassFactory {
 
 	private Collection<Object> possibleParameters;
 

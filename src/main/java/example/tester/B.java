@@ -1,12 +1,14 @@
 package example.tester;
 
+import de.thorbenkuck.rhfw.annotations.AutoResolve;
 import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
 
 public class B implements RegisterModuleInterface {
 
     private String name;
 
-    public B () {
+    @AutoResolve
+    public B (A a) {
         name = "B";
     }
 

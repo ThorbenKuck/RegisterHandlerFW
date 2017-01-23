@@ -1,25 +1,45 @@
 package de.thorbenkuck.rhfw.pipe;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import org.apache.logging.log4j.LogManager;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 public class DataOutputPipe {
 
-    private ArrayList<String> dataKeyList = new ArrayList<>();
     private ObjectedModuleContainerList<String, Object> moduleContainerList = new ObjectedModuleContainerList<>();
-    private static DataOutputPipe instance;
+    private Object identifier;
+    private static final HashMap<Object, DataOutputPipe> instance = new HashMap<>();
 
-    private DataOutputPipe() {
+    private DataOutputPipe(Object identifier) {
+    	this.identifier = identifier;
     }
 
+	@Deprecated
     public static DataOutputPipe getInstance() {
-        if(instance == null) {
-            instance = new DataOutputPipe();
-        }
-        return instance;
+		instance.computeIfAbsent("", k -> new DataOutputPipe(""));
+		LogManager.getLogger().warn("The use of DataOutputPipe#getInstance() is discouraged!");
+        return instance.get("");
     }
+
+    public static DataOutputPipe access() {
+    	return access("");
+	}
+
+    public static DataOutputPipe access(Object key) {
+		instance.computeIfAbsent(key, k -> new DataOutputPipe(key));
+		return instance.get(key);
+	}
+
+	public static boolean exists(Object key) {
+    	return instance.get(key) != null;
+	}
+
+	public static boolean accessable(Object key) {
+		// TODO
+		return exists(key);
+	}
 
     public Collection<Object> getModules() {
         return moduleContainerList.getValues();
@@ -31,8 +51,11 @@ public class DataOutputPipe {
             return;
         }
         moduleContainerList.addObjectedModule(name, component);
-        dataKeyList.add(name);
     }
+
+    public void add(Object component) {
+    	add(component.getClass().getName(), component);
+	}
 
 
     /**
@@ -42,25 +65,14 @@ public class DataOutputPipe {
      * @param <T>
      * @return
      */
+    @Deprecated
     public <T> T getModule(String name, Class<T> type) {
-        T toReturn = null;
-        Class<?> classToInstance = moduleContainerList.getObjectedModule(name).getClass();
-        String classNameToInstance = classToInstance.getName();
-        try {
-            Class<?> clazz = Class.forName(classNameToInstance);
-            Constructor<?> ctor = clazz.getConstructor();
-            Object object = ctor.newInstance();
-            toReturn = type.cast(object);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-        return toReturn;
+        return getModule(name);
     }
 
     public <T> T getModule(String name) {
         Object o = moduleContainerList.getObjectedModule(name);
-        Class<T> type = (Class<T>) o.getClass();
-        return getModule(name, type);
+        return (T) o;
     }
 
     public Class<?> getType(String name) {
@@ -68,14 +80,15 @@ public class DataOutputPipe {
     }
 
     public ArrayList<String> getAllKeys() {
-        return dataKeyList;
+        return new ArrayList<>(moduleContainerList.getKeys());
     }
 
     public boolean keyInDataOutputPipe(String key) {
-        return dataKeyList.contains(key);
+        return moduleContainerList.getKeys().contains(key);
     }
 
     public void loadAnnotatedModules() {
+    	LogManager.getLogger().info("Loading annotated classes for DataOutputPipe(" + identifier + ")");
         new ClassDependencyResolver(this).resolve();
     }
 
