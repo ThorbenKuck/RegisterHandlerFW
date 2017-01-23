@@ -1,6 +1,6 @@
 package de.thorbenkuck.rhfw.pipe;
 
-import de.thorbenkuck.rhfw.annotations.RegisterModule;
+import de.thorbenkuck.rhfw.annotations.DataModule;
 import de.thorbenkuck.rhfw.exceptions.CriticalErrorException;
 import de.thorbenkuck.rhfw.exceptions.NoSuitableConstructorException;
 import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
@@ -31,24 +31,24 @@ class ClassDependencyResolver implements DependencyResolver {
 	public void resolve() {
 		FastClasspathScanner fastClasspathScanner = new FastClasspathScanner();
 		logger.info("Started scanning ..");
-		fastClasspathScanner.matchClassesWithAnnotation(RegisterModule.class, aClass -> {
+		fastClasspathScanner.matchClassesWithAnnotation(DataModule.class, aClass -> {
 			if (!toCreate.contains(aClass)) {
-				if (aClass.getAnnotation(RegisterModule.class).included()) {
+				if (aClass.getAnnotation(DataModule.class).included()) {
 					toCreate.add(aClass);
 				} else if (! abounded.contains(aClass)) {
 					abounded.add(aClass);
-					logger.debug("Class [" + aClass + "] disabled via Annotation \"" + RegisterModule.class + "\"");
+					logger.debug("Class [" + aClass + "] disabled via Annotation \"" + DataModule.class + "\"");
 				}
 			}
 		}).matchClassesImplementing(RegisterModuleInterface.class, implementingClass -> {
 			if (!toCreate.contains(implementingClass)) {
-				if (implementingClass.getAnnotation(RegisterModule.class) == null ||
-						(implementingClass.getAnnotation(RegisterModule.class) != null && implementingClass.getAnnotation(RegisterModule.class).included())) {
+				if (implementingClass.getAnnotation(DataModule.class) == null ||
+						(implementingClass.getAnnotation(DataModule.class) != null && implementingClass.getAnnotation(DataModule.class).included())) {
 					toCreate.add(implementingClass);
 				} else if (! abounded.contains(implementingClass)) {
 					// TODO: log
 					abounded.add(implementingClass);
-					logger.debug("Class [" + implementingClass + "] disabled via Annotation \"" + RegisterModule.class + "\"");
+					logger.debug("Class [" + implementingClass + "] disabled via Annotation \"" + DataModule.class + "\"");
 				}
 			}
 		}).scan();
