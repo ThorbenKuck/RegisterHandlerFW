@@ -1,39 +1,35 @@
 package de.thorbenkuck.rhfw.register.fetching;
 
 import de.thorbenkuck.rhfw.pipe.ObjectedModuleContainerList;
+import de.thorbenkuck.rhfw.register.RepositoryCondition;
+import de.thorbenkuck.rhfw.register.ResultMatcher;
+import de.thorbenkuck.rhfw.register.ToRepositoryFilteredCondition;
 
 import java.util.*;
 
-public class DataOutputPipeFetchStream<T> {
+public class DataOutputPipeFetchStream<T> implements RepositoryCondition<T, ToRepositoryFilteredCondition<T>> {
 
 	private Queue<T> result = new LinkedList<>();
-	private ObjectedModuleContainerList<String, Object> dataOutputPipeModules;
-	private HashMap<String, Object> registerInternals;
+	private List<Object> dataOutputPipeModules;
+	private List<Object> registerInternals;
 
-	private DataOutputPipeFetchStream(ObjectedModuleContainerList<String, Object> dataOutputPipeModules, HashMap<String, Object> registerInternals, Queue<T> result) {
-		this(dataOutputPipeModules, registerInternals);
-		this.result = result;
-	}
-
-	public DataOutputPipeFetchStream(ObjectedModuleContainerList<String, Object> dataOutputPipeModules, HashMap<String, Object> registerInternals) {
+	public DataOutputPipeFetchStream(List<Object> dataOutputPipeModules, List<Object> registerInternals) {
 		this.dataOutputPipeModules = dataOutputPipeModules;
 		this.registerInternals = registerInternals;
 	}
 
-	public DataOutputPipeFetchStream ofClassType(Class<? extends T> clazz) {
-		dataOutputPipeModules.getValues().stream().filter(o -> o.getClass().equals(clazz)).forEach((e) -> result.add((T) e));
-		return new DataOutputPipeFetchStream<>(dataOutputPipeModules, registerInternals, result);
+	@Override
+	public ToRepositoryFilteredCondition<T> ofClassType(Class clazz) {
+		return null;
 	}
 
-	public void toRegister() {
-		result.forEach(o -> registerInternals.put(o.getClass().getName(), o));
+	@Override
+	public ToRepositoryFilteredCondition<T> where(ResultMatcher<Class<?>> resultMatcher) {
+		return null;
 	}
 
-	public List<T> getAny() {
-		return new ArrayList<>(result);
-	}
-
-	public T getFirst() {
-		return result.poll();
+	@Override
+	public ToRepositoryFilteredCondition<T> without(ResultMatcher<Class<?>> resultMatcher) {
+		return null;
 	}
 }
