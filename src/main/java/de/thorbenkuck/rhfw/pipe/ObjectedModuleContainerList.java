@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * Eine DataContainerList wird genutzt um Objekte zu speichern
  */
-class ObjectedModuleContainerList<String, Object> {
+public class ObjectedModuleContainerList<String, Object> {
 
     private Map<String, Object> objectedModuleHashMap;
 
@@ -21,10 +21,6 @@ class ObjectedModuleContainerList<String, Object> {
         return objectedModuleHashMap.get(key);
     }
 
-    Collection<Object> getValues() {
-    	return objectedModuleHashMap.values();
-	}
-
     void updateObjectedModule(String key, Object data) {
         objectedModuleHashMap.put(key, data);
     }
@@ -37,5 +33,9 @@ class ObjectedModuleContainerList<String, Object> {
 
 	public List<String> getKeys() {
 		return new ArrayList<>(objectedModuleHashMap.keySet());
+	}
+
+	public Collection<Object> getValues() {
+		return objectedModuleHashMap.values();
 	}
 }

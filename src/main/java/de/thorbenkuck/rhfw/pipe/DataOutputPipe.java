@@ -36,6 +36,10 @@ public class DataOutputPipe {
 		return instance.get(key);
 	}
 
+	public ObjectedModuleContainerList<String, Object> getModuleContainerList() {
+    	return moduleContainerList;
+	}
+
 	public static boolean exists(Object key) {
     	return instance.get(key) != null;
 	}

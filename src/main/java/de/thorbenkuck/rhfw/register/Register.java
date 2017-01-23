@@ -44,9 +44,13 @@ public class Register {
      * All these things cooperate with one another.
      */
     public Register() {
-        registerId = new RegisterID();
-        dataOutputPipe = getDataOutputPipe();
+    	this(getDataOutputPipe());
     }
+
+    public Register(DataOutputPipe dataOutputPipe) {
+		registerId = new RegisterID();
+		this.dataOutputPipe = dataOutputPipe;
+	}
 
     /**
      * <p>
@@ -114,7 +118,7 @@ public class Register {
     }
 
     public FetchHandler fetch() {
-		return new FetchHandler(this, dataOutputPipe);
+		return new FetchHandler(moduleContainerList, dataOutputPipe);
 	}
 
     /**
