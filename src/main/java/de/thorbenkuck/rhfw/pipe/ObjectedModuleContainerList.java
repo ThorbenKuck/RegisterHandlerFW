@@ -1,8 +1,6 @@
 package de.thorbenkuck.rhfw.pipe;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Eine DataContainerList wird genutzt um Objekte zu speichern
@@ -22,6 +20,10 @@ class ObjectedModuleContainerList<String, Object> {
     Object getObjectedModule(String key) {
         return objectedModuleHashMap.get(key);
     }
+
+    Collection<Object> getValues() {
+    	return objectedModuleHashMap.values();
+	}
 
     void updateObjectedModule(String key, Object data) {
         objectedModuleHashMap.put(key, data);

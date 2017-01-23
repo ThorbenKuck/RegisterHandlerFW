@@ -7,12 +7,12 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-class ConstructorFinder {
+class ConstructorFinder<T> {
 
-	private Class clazz;
+	private Class<T> clazz;
 	private List<Constructor> excluded = new ArrayList<>();
 
-	ConstructorFinder(Class clazz) {
+	ConstructorFinder(Class<T> clazz) {
 		this.clazz = clazz;
 	}
 
@@ -20,8 +20,8 @@ class ConstructorFinder {
 		excluded.add(constructor);
 	}
 
-	public Constructor find() {
-		for(Constructor constructor : clazz.getConstructors()) {
+	public Constructor<?> find() {
+		for(Constructor<?> constructor : clazz.getConstructors()) {
 			if(!excluded.contains(constructor) && constructor.getAnnotation(AutoResolve.class) != null) {
 				return constructor;
 			}
@@ -29,7 +29,16 @@ class ConstructorFinder {
 		return fallBack();
 	}
 
+	/**
+	 * Try to find a default-Constructor
+	 * @return
+	 */
 	private Constructor fallBack() {
-		throw new NoSuitableConstructorException("No suitable Constructor find for Class: " + clazz);
+		for(Constructor constructor : clazz.getConstructors()) {
+			if(constructor.getParameterTypes().length == 0) {
+				return constructor;
+			}
+		}
+		throw new NoSuitableConstructorException("No suitable Constructor found for Class: " + clazz + "\nIf the class does not have a default-constructor, at least one constructor must be marked with the Annotation AutoResolve");
 	}
 }

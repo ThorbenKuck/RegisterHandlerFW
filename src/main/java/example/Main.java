@@ -1,5 +1,6 @@
 package example;
 
+import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
 import de.thorbenkuck.rhfw.register.handler.RegisterHandler;
 import de.thorbenkuck.rhfw.register.Register;
 import example.tester.C;
@@ -9,6 +10,8 @@ import example.tester.Tester2;
 
 public class Main {
     public static void main(String[] args) {
+
+        DataOutputPipe.getInstance().loadAnnotatedModules();
 
         Register register = RegisterHandler.pullAndGetNewRegister(new TestTemplate());
 

@@ -3,13 +3,12 @@ package de.thorbenkuck.rhfw.pipe;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class DataOutputPipe {
 
     private ArrayList<String> dataKeyList = new ArrayList<>();
-
     private ObjectedModuleContainerList<String, Object> moduleContainerList = new ObjectedModuleContainerList<>();
-
     private static DataOutputPipe instance;
 
     private DataOutputPipe() {
@@ -20,6 +19,10 @@ public class DataOutputPipe {
             instance = new DataOutputPipe();
         }
         return instance;
+    }
+
+    public Collection<Object> getModules() {
+        return moduleContainerList.getValues();
     }
 
     public void add(String name, Object component) {
