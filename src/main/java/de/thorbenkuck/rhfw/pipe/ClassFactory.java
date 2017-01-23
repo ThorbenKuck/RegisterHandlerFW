@@ -1,5 +1,7 @@
 package de.thorbenkuck.rhfw.pipe;
 
+import de.thorbenkuck.rhfw.exceptions.NoSuitableConstructorException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -19,8 +21,9 @@ public class ClassFactory {
 		Constructor constructor = constructorFinder.find();
 		if(canResolveDependencies(constructor)) {
 			return constructor.newInstance(getParametersAsArray(constructor.getParameterTypes()));
+		} else {
+			throw new NoSuitableConstructorException("Could not find suitable constructor for class [" + clazz + "]: Could not resolve dependencies\nGiven dependencies: " + possibleParameters);
 		}
-		return null;
 	}
 
 	private boolean canResolveDependencies(Constructor constructor) {
