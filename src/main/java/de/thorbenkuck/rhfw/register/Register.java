@@ -1,6 +1,7 @@
 package de.thorbenkuck.rhfw.register;
 
 import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
+import de.thorbenkuck.rhfw.register.fetching.FetchHandler;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -111,6 +112,10 @@ public class Register {
         pullModuleFromPipe(className);
         return pullModule(className);
     }
+
+    public FetchHandler fetch() {
+		return new FetchHandler(this, dataOutputPipe);
+	}
 
     /**
      * <p>
