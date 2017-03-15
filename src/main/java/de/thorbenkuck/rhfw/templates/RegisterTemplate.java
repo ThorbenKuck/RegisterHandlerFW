@@ -5,7 +5,7 @@ import java.util.List;
 
 public abstract class RegisterTemplate {
 
-    private List<String> classesToImplement = new ArrayList<>();
+    private List<Class<?>> classesToImplement = new ArrayList<>();
     private String legerId;
     private boolean autoImport = true;
 
@@ -14,11 +14,7 @@ public abstract class RegisterTemplate {
         autoImport = true;
     }
 
-    public void addToAutoPull(Class<?> clazz) {
-        classesToImplement.add(clazz.getName());
-    }
-
-    public void addToAutoPull(String className) {
+    public void addToAutoPull(Class<?> className) {
         classesToImplement.add(className);
     }
 
@@ -30,11 +26,11 @@ public abstract class RegisterTemplate {
         return this.legerId;
     }
 
-    public List<String> getClassesToImplement() {
+    public List<Class<?>> getClassesToImplement() {
         return this.classesToImplement;
     }
 
-    public boolean classesToImplementEmpyt() {
+    public boolean classesToImplementEmpty() {
         return classesToImplement.isEmpty();
     }
 

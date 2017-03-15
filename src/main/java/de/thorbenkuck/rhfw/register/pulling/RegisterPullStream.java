@@ -1,12 +1,19 @@
 package de.thorbenkuck.rhfw.register.pulling;
 
-public class RegisterPullStream<T> {
+import java.util.HashMap;
 
-	void getAny() {
+public class RegisterPullStream<T> implements PullStream {
 
+	private final Class<T> key;
+	private final HashMap<Object, Object> registerInternals;
+
+	public RegisterPullStream(Class<T> key, HashMap<Object, Object> registerInternals) {
+		this.key = key;
+		this.registerInternals = registerInternals;
 	}
 
-	void getFirst() {
-
+	@Override
+	public <Type> Type get() {
+		return (Type) registerInternals.get(key);
 	}
 }

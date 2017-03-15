@@ -2,7 +2,7 @@ package example.tester;
 
 import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
 
-public class C implements RegisterModuleInterface {
+public class C implements RegisterModuleInterface, IC {
 
     private int counter;
 

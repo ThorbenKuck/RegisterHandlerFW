@@ -1,6 +1,7 @@
 package de.thorbenkuck.rhfw.pipe;
 
 import de.thorbenkuck.rhfw.annotations.DataModule;
+import de.thorbenkuck.rhfw.duplicate.Duplicator;
 import de.thorbenkuck.rhfw.exceptions.CriticalErrorException;
 import de.thorbenkuck.rhfw.exceptions.NoSuitableConstructorException;
 import de.thorbenkuck.rhfw.interfaces.RegisterModuleInterface;
@@ -9,10 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 class ClassDependencyResolver implements DependencyResolver {
 
@@ -21,10 +19,12 @@ class ClassDependencyResolver implements DependencyResolver {
 	private Set<Class> toCreate = new HashSet<>();
 	private Set<Class> abounded = new HashSet<>();
 	private Logger logger = LogManager.getLogger(getClass());
+	private Duplicator duplicator;
 
 	public ClassDependencyResolver(DataOutputPipe dataOutputPipe) {
 		this.dataOutputPipe = dataOutputPipe;
 		classFactory = new ClassFactory(dataOutputPipe.getModules());
+		duplicator = new Duplicator(classFactory);
 	}
 
 	@Override
@@ -32,8 +32,9 @@ class ClassDependencyResolver implements DependencyResolver {
 		FastClasspathScanner fastClasspathScanner = new FastClasspathScanner();
 		logger.info("Started scanning ..");
 		fastClasspathScanner.matchClassesWithAnnotation(DataModule.class, aClass -> {
-			if (!toCreate.contains(aClass)) {
+			if (! toCreate.contains(aClass)) {
 				if (aClass.getAnnotation(DataModule.class).included()) {
+					logger.debug("Found class: " + aClass);
 					toCreate.add(aClass);
 				} else if (! abounded.contains(aClass)) {
 					abounded.add(aClass);
@@ -41,9 +42,10 @@ class ClassDependencyResolver implements DependencyResolver {
 				}
 			}
 		}).matchClassesImplementing(RegisterModuleInterface.class, implementingClass -> {
-			if (!toCreate.contains(implementingClass)) {
+			if (! toCreate.contains(implementingClass)) {
 				if (implementingClass.getAnnotation(DataModule.class) == null ||
 						(implementingClass.getAnnotation(DataModule.class) != null && implementingClass.getAnnotation(DataModule.class).included())) {
+					logger.debug("Found class: " + implementingClass);
 					toCreate.add(implementingClass);
 				} else if (! abounded.contains(implementingClass)) {
 					// TODO: log
@@ -52,7 +54,7 @@ class ClassDependencyResolver implements DependencyResolver {
 				}
 			}
 		}).scan();
-
+		logger.debug("Finished Scanning");
 		resolveIndependently();
 	}
 
@@ -64,7 +66,7 @@ class ClassDependencyResolver implements DependencyResolver {
 			List<Class> toDelete = new ArrayList<>();
 			toCreate.forEach(aClass -> {
 				boolean succ = tryInstantiate(aClass);
-				if(succ) {
+				if (succ) {
 					toDelete.add(aClass);
 				}
 				hit[0] |= succ;
@@ -75,17 +77,14 @@ class ClassDependencyResolver implements DependencyResolver {
 		checkForError();
 	}
 
-	private void checkForError() {
-		NoSuitableConstructorException noSuitableConstructorException = null;
-		if(toCreate.size() > 0) {
-			for(Class c : toCreate) {
-				if(noSuitableConstructorException == null) {
-					noSuitableConstructorException = new NoSuitableConstructorException("No suitable constructor found for Class: " + c);
-				} else {
-					noSuitableConstructorException = new NoSuitableConstructorException("No suitable constructor found for Class: " + c, noSuitableConstructorException);
-				}
-			}
-			throw new NoSuitableConstructorException("Could not resolve dependencies", noSuitableConstructorException);
+	private boolean tryInstantiate(Class clazz) {
+		try {
+			Object o = classFactory.create(clazz);
+			dataOutputPipe.add(clazz.getName(), duplicator.duplicate(o));
+			logger.debug("Included Class [" + clazz + "]");
+			return true;
+		} catch (IllegalAccessException | InstantiationException | InvocationTargetException | CriticalErrorException e) {
+			return false;
 		}
 	}
 
@@ -93,21 +92,28 @@ class ClassDependencyResolver implements DependencyResolver {
 		toCreate.removeAll(toDelete);
 	}
 
-	private boolean tryInstantiate(Class clazz) {
-		try {
-			Object o = classFactory.create(clazz);
-			if (o != null) {
-				dataOutputPipe.add(clazz.getName(), o);
-				logger.debug("Included Class [" + clazz + "]");
-				return true;
+	private void checkForError() {
+		if (toCreate.size() > 0) {
+			NoSuitableConstructorException noSuitableConstructorException = null;
+			for (Class c : toCreate) {
+				if (noSuitableConstructorException == null) {
+					noSuitableConstructorException = new NoSuitableConstructorException("Error while resolving dependencies!\nNo suitable constructor found for Class: " + c
+							+ "\nRequired Dependencies: " + Arrays.toString(classFactory.getRequiredDependencies(c))
+							+ "\nGiven Dependencies: " + getGivenDependenciesNames());
+				} else {
+					noSuitableConstructorException = new NoSuitableConstructorException("Error while resolving dependencies!\nNo suitable constructor found for Class: " + c
+							+ "\nRequired Dependencies: " + Arrays.toString(classFactory.getRequiredDependencies(c))
+							+ "\nGiven Dependencies: " + getGivenDependenciesNames(), noSuitableConstructorException);
+				}
 			}
-			return false;
-		} catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-			logger.debug("Skipped Class [" + clazz + "]");
-			return false;
-		} catch (CriticalErrorException e) {
-			logger.debug("Skipped Class [" + clazz + "]");
-			return false;
+			throw new NoSuitableConstructorException("Could not resolve dependencies", noSuitableConstructorException);
 		}
+	}
+
+	private String getGivenDependenciesNames() {
+		final StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
+		dataOutputPipe.getModules()
+				.forEach(o -> stringJoiner.add(o.getClass().toString()));
+		return stringJoiner.toString();
 	}
 }

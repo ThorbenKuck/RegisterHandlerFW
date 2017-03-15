@@ -12,10 +12,10 @@ public class Tester2 {
     }
 
     public void run() {
-        C c = register.pullModule(C.class.getName());
+        C c = register.pull().object(C.class);
         c.howMuch();
         c.higher();
-        register.pushModuleToRegister(C.class.getName() , c);
+        register.push().toRegister(c);
     }
 
 }

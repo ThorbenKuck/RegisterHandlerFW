@@ -1,20 +1,22 @@
 package de.thorbenkuck.rhfw.register.fetching;
 
 import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
+import de.thorbenkuck.rhfw.register.Register;
 
 import java.util.HashMap;
 
 public class FetchHandler {
 
-	private HashMap<String, Object> registerInternals;
+	private HashMap<Object, Object> registerInternals;
 	private DataOutputPipe source;
+	private Register register;
 
-	public FetchHandler(HashMap<String, Object> registerInternals, DataOutputPipe source) {
+	public FetchHandler(HashMap<Object, Object> registerInternals, DataOutputPipe source) {
 		this.registerInternals = registerInternals;
 		this.source = source;
 	}
 
-	public DataOutputPipeFetchStream fromDataOutputPipe() {
-		return new DataOutputPipeFetchStream(source.getModuleContainerList(), registerInternals);
+	public DataOutputPipeRepositoryCondition fromDataOutputPipe() {
+		return new DataOutputPipeRepositoryCondition(source, registerInternals);
 	}
 }

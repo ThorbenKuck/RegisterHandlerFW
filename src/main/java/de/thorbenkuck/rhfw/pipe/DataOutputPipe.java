@@ -8,8 +8,8 @@ import java.util.HashMap;
 
 public class DataOutputPipe {
 
-    private ObjectedModuleContainerList<String, Object> moduleContainerList = new ObjectedModuleContainerList<>();
-    private Object identifier;
+    private final ObjectedModuleContainerList<Object, Object> moduleContainerList = new ObjectedModuleContainerList<>();
+    private final Object identifier;
     private static final HashMap<Object, DataOutputPipe> instance = new HashMap<>();
 
     public DataOutputPipe() {
@@ -36,7 +36,7 @@ public class DataOutputPipe {
 		return instance.get(key);
 	}
 
-	public ObjectedModuleContainerList<String, Object> getModuleContainerList() {
+	public ObjectedModuleContainerList<Object, Object> getModuleContainerList() {
     	return moduleContainerList;
 	}
 
@@ -45,7 +45,6 @@ public class DataOutputPipe {
 	}
 
 	public static boolean accessable(Object key) {
-		// TODO
 		return exists(key);
 	}
 
@@ -53,7 +52,7 @@ public class DataOutputPipe {
         return moduleContainerList.getValues();
     }
 
-    public void add(String name, Object component) {
+    public void add(Object name, Object component) {
         if(moduleContainerList.contains(name)) {
             // TODO Exceptionhandling
             return;
@@ -62,7 +61,7 @@ public class DataOutputPipe {
     }
 
     public void add(Object component) {
-    	add(component.getClass().getName(), component);
+    	add(component.getClass(), component);
 	}
 
 
@@ -74,24 +73,24 @@ public class DataOutputPipe {
      * @return
      */
     @Deprecated
-    public <T> T getModule(String name, Class<T> type) {
+    public <T> T getModule(Object name, Class<T> type) {
         return getModule(name);
     }
 
-    public <T> T getModule(String name) {
+    public <T> T getModule(Object name) {
         Object o = moduleContainerList.getObjectedModule(name);
         return (T) o;
     }
 
-    public Class<?> getType(String name) {
+    public Class<?> getType(Object name) {
         return moduleContainerList.getObjectedModule(name).getClass();
     }
 
-    public ArrayList<String> getAllKeys() {
+    public ArrayList<Object> getAllKeys() {
         return new ArrayList<>(moduleContainerList.getKeys());
     }
 
-    public boolean keyInDataOutputPipe(String key) {
+    public boolean keyInDataOutputPipe(Object key) {
         return moduleContainerList.getKeys().contains(key);
     }
 

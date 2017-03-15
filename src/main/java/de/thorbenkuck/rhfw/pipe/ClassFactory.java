@@ -1,6 +1,8 @@
 package de.thorbenkuck.rhfw.pipe;
 
 import de.thorbenkuck.rhfw.exceptions.NoSuitableConstructorException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +19,7 @@ public class ClassFactory {
 	}
 
 	public Object create(Class clazz) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-		ConstructorFinder constructorFinder = new ConstructorFinder(clazz);
-		Constructor constructor = constructorFinder.find();
+		Constructor constructor = getConstructor(clazz);
 		if(canResolveDependencies(constructor)) {
 			return constructor.newInstance(getParametersAsArray(constructor.getParameterTypes()));
 		} else {
@@ -26,7 +27,19 @@ public class ClassFactory {
 		}
 	}
 
+	public Class<?>[] getRequiredDependencies(Class clazz) {
+		return getConstructor(clazz).getParameterTypes();
+	}
+
+	private Constructor getConstructor(Class clazz) {
+		ConstructorFinder constructorFinder = new ConstructorFinder(clazz);
+		return constructorFinder.find();
+	}
+
 	private boolean canResolveDependencies(Constructor constructor) {
+		if(constructor.getParameterTypes().length == 0) {
+			return true;
+		}
 		for(Class clazz : constructor.getParameterTypes())  {
 			if(!parameterGiven(clazz)) {
 				return false;

@@ -2,6 +2,8 @@ package de.thorbenkuck.rhfw.register;
 
 import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
 import de.thorbenkuck.rhfw.register.fetching.FetchHandler;
+import de.thorbenkuck.rhfw.register.pulling.PullHandler;
+import de.thorbenkuck.rhfw.register.pushing.PushHandler;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -32,7 +34,7 @@ public class Register {
     /**
      * Modules, that this register pulled / fetched.
      */
-    private HashMap<String, Object> moduleContainerList = new HashMap<>();
+    private HashMap<Object, Object> moduleContainerList = new HashMap<>();
 
     /**
      * Up on creating a new Register, the Register instances 3 things:
@@ -63,7 +65,8 @@ public class Register {
      *
      * @param className The name of the module, witch should be fetched from the DataOutputPipe
      */
-    public void fetchModuleFromPipe(String className) {
+    @Deprecated
+    public void fetchModuleFromPipe(Object className) {
         if(!moduleContainerList.containsKey(className)) {
             moduleContainerList.put(className, dataOutputPipe.getModule(className));
         }
@@ -80,7 +83,8 @@ public class Register {
      * </p>
      * @param className The name of the module, witch should be pulled from the DataOutputPipe
      */
-    public void pullModuleFromPipe(String className) {
+    @Deprecated
+    public void pullModuleFromPipe(Object className) {
         moduleContainerList.put(className, dataOutputPipe.getModule(className));
     }
 
@@ -95,7 +99,8 @@ public class Register {
      * @param className The name of the module, witch should be fetched from the DataOutputPipe
      * @return module The module, witch had been fetched.
      */
-    public <T> T fetchAndGetModuleFromPipe(String className) {
+    @Deprecated
+    public <T> T fetchAndGetModuleFromPipe(Object className) {
         fetchModuleFromPipe(className);
         return pullModule(className);
     }
@@ -112,7 +117,8 @@ public class Register {
      * @param className The name of the module, witch should be pulled from the DataOutputPipe
      * @return module The module, witch had been pulled.
      */
-    public <T> T pullAndGetModuleFromPipe(String className) {
+    @Deprecated
+    public <T> T pullAndGetModuleFromPipe(Object className) {
         pullModuleFromPipe(className);
         return pullModule(className);
     }
@@ -121,15 +127,23 @@ public class Register {
 		return new FetchHandler(moduleContainerList, dataOutputPipe);
 	}
 
+	public PullHandler pull() {
+    	return new PullHandler(moduleContainerList, dataOutputPipe);
+	}
+
+	public PushHandler push() {
+    	return new PushHandler(dataOutputPipe, moduleContainerList);
+	}
+
     /**
      * <p>
      *     Pulls a DataModule from the current Register. If it is not contained within the Register ... TODO
      * </p>
-     * @param className The name of the module, witch should be pulled from the Register
+     * @param key The name of the module, witch should be pulled from the Register
      * @return DataModule
      */
-    public <T> T pullModule(String className) {
-        return (T) cloneObject(moduleContainerList.get(className));
+    public <T> T pullModule(Object key) {
+        return (T) cloneObject(moduleContainerList.get(key));
     }
 
     /**
@@ -138,19 +152,21 @@ public class Register {
      * </p>
      * @param object The object, that should be safed within the Register
      */
+    @Deprecated
     public void pushModuleToRegister(Object object) {
-        pushModuleToRegister(object.getClass().getName(), object);
+        pushModuleToRegister(object.getClass(), object);
     }
 
     /**
      * <p>
      *     Pushes a DataModule to the Register and safes it to a custom name. This overwrites contained Modules, if the name is already taken.
      * </p>
-     * @param className The name, under witch the Object should be safed.
+     * @param key The key, under witch the Object should be safed.
      * @param object The object, that should be safed within the Register
      */
-    public void pushModuleToRegister(String className, Object object) {
-        moduleContainerList.put(className, object);
+    @Deprecated
+    public void pushModuleToRegister(Object key, Object object) {
+        moduleContainerList.put(key, object);
     }
 
     /**
@@ -165,8 +181,8 @@ public class Register {
     }
 
     // TODO
-    public void removeModule(String className) {
-        moduleContainerList.remove(className);
+    public void removeModule(Object key) {
+        moduleContainerList.remove(key);
     }
 
     private synchronized Object cloneObject(Object object) {

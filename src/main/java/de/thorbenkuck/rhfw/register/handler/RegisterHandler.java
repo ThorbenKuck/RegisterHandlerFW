@@ -5,7 +5,6 @@ import de.thorbenkuck.rhfw.register.RegisterID;
 import de.thorbenkuck.rhfw.templates.RegisterTemplate;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class RegisterHandler {
 
@@ -38,25 +37,22 @@ public class RegisterHandler {
 
     public static RegisterID pullNewRegister(RegisterTemplate template) {
         Register newRegister = new Register();
-        RegisterID id = newRegister.getRegisterId();
-        RegisterHandler.registerList.put(id, newRegister);
-        List<String> classesToImplement = null;
-        String legerId;
 
-        if (!template.classesToImplementEmpyt()) {
+        if (!template.classesToImplementEmpty()) {
             if (template.autoImport()) {
-                classesToImplement = template.getClassesToImplement();
-                for (String s : classesToImplement) {
-                    RegisterHandler.registerList.get(id).fetchModuleFromPipe(s);
+                for (Class<?> clazz : template.getClassesToImplement()) {
+                   newRegister.fetch().fromDataOutputPipe().ofClassType(clazz).toRegister();
                 }
             }
         }
+
+		RegisterID id = newRegister.getRegisterId();
+		RegisterHandler.registerList.put(id, newRegister);
         if (template.getlegerId() != null) {
-            legerId = template.getlegerId();
-            bindRegister(legerId, newRegister.getRegisterId());
+            bindRegister(template.getlegerId(), newRegister.getRegisterId());
         }
 
-        return newRegister.getRegisterId();
+        return id;
     }
 
     public static Register pullAndGetNewRegister(RegisterTemplate template) {

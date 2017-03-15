@@ -1,6 +1,7 @@
 package de.thorbenkuck.rhfw.pipe;
 
 import de.thorbenkuck.rhfw.annotations.AutoResolve;
+import de.thorbenkuck.rhfw.exceptions.CriticalErrorException;
 import de.thorbenkuck.rhfw.exceptions.NoSuitableConstructorException;
 
 import java.lang.reflect.Constructor;
@@ -21,12 +22,20 @@ class ConstructorFinder {
 	}
 
 	public Constructor<?> find() {
+		Constructor<?> toReturn = null;
 		for(Constructor<?> constructor : clazz.getConstructors()) {
 			if(!excluded.contains(constructor) && constructor.getAnnotation(AutoResolve.class) != null) {
-				return constructor;
+				if(toReturn == null) {
+					toReturn = constructor;
+				} else {
+					throw new NoSuitableConstructorException("Could not determine constructor to use for " + clazz
+							+ "\nCou cannot mark more than one Constructor to be auto resolved!\nYou have to:\n\n"
+							+ "1) Create exactly ONE Constructor with the @AutoResolve annotation or\n\n"
+							+ "2) Have at least ONE default Constructor\n\nStackTrace:");
+				}
 			}
 		}
-		return fallBack();
+		return toReturn == null ? fallBack() : toReturn;
 	}
 
 	/**

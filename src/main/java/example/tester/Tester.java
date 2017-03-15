@@ -12,10 +12,11 @@ public class Tester {
     }
 
     public void run() {
-        C c = register.fetchAndGetModuleFromPipe(C.class.getName());
+//        C c = register.fetch().fromDataOutputPipe().ofClassType(C.class).toRegisterAndGetFirst();
+        C c = register.pull().object(C.class);
         c.howMuch();
         c.higher();
-        register.pushModuleToRegister(C.class.getName() , c);
+        register.push().toRegister(c);
     }
 
 }

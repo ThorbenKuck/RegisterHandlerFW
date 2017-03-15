@@ -1,10 +1,10 @@
 package de.thorbenkuck.rhfw.register;
 
-interface Filtering<Result> {
+interface Filtering {
 
-	Result ofClassType(Class clazz);
+	<T> ToRepositoryFilteredCondition<T> ofClassType(Class<T> clazz);
 
-	Result where(ResultMatcher<Class<?>> resultMatcher);
+	<T> ToRepositoryFilteredCondition<T> ofInterface(Class<T> clazz);
 
-	Result without(ResultMatcher<Class<?>> resultMatcher);
+	ToRepositoryFilteredCondition<Object> any();
 }

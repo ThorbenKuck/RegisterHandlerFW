@@ -1,4 +1,4 @@
 package de.thorbenkuck.rhfw.register;
 
-public interface RepositoryCondition<T, S> extends Filtering<S> {
+public interface RepositoryCondition extends Filtering {
 }

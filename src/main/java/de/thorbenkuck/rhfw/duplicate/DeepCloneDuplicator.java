@@ -1,4 +1,4 @@
-package de.thorbenkuck.rhfw.pipe.duplicate;
+package de.thorbenkuck.rhfw.duplicate;
 
 import java.io.*;
 
@@ -18,8 +18,7 @@ public class DeepCloneDuplicator {
 		}
 		catch(Exception e) {
 			return null;
-		}
-		finally {
+		} finally {
 			try {
 				if(oos != null) {
 					oos.close();

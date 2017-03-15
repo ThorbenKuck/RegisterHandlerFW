@@ -1,24 +1,30 @@
 package de.thorbenkuck.rhfw.register.pulling;
 
-import de.thorbenkuck.rhfw.pipe.ObjectedModuleContainerList;
-import de.thorbenkuck.rhfw.register.handler.RegisterHandler;
+import de.thorbenkuck.rhfw.duplicate.Duplicator;
+import de.thorbenkuck.rhfw.pipe.DataOutputPipe;
+
+import java.util.HashMap;
 
 public class PullHandler {
 
-	private RegisterHandler registerHandler;
-	private ObjectedModuleContainerList<String, Object> dataOutputPipeModules;
+	private final HashMap<Object, Object> registerInternals;
+	private final DataOutputPipe dataOutputPipe;
 
-	public PullHandler(RegisterHandler registerHandler, ObjectedModuleContainerList<String, Object> dataOutputPipeModules) {
-		this.registerHandler = registerHandler;
-		this.dataOutputPipeModules = dataOutputPipeModules;
+	public PullHandler(HashMap<Object, Object> registerInternals, DataOutputPipe dataOutputPipe) {
+		this.registerInternals = registerInternals;
+		this.dataOutputPipe = dataOutputPipe;
 	}
 
-	void fromDataOutputPipe() {
-
+	public <T> PipePullStream fromDataOutputPipe(Class<T> key) {
+		return new DataOutputPipePullStream(registerInternals, dataOutputPipe, key);
 	}
 
-	void fromRegister() {
+	public <T> T object(Class<T> key) {
+		return (T) duplicate(registerInternals.get(key));
+	}
 
+	static Object duplicate(Object object) {
+		return Duplicator.tryAccess().duplicate(object);
 	}
 
 }
